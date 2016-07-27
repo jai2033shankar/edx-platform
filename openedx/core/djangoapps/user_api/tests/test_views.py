@@ -1988,7 +1988,9 @@ class CountryTimeZoneListViewTest(UserApiTestCase):
 
     def _assert_time_zone_is_valid(self, time_zone_info):
         """ Asserts that the time zone is a valid pytz time zone """
-        self.assertIn(time_zone_info['time_zone'], common_timezones_set)
+        time_zone_name = time_zone_info['time_zone']
+        self.assertIn(time_zone_name, common_timezones_set)
+        self.assertEqual(time_zone_info['description'], get_display_time_zone(time_zone_name))
 
     @ddt.data((ALL_TIME_ZONES_URI, 432),
               (COUNTRY_TIME_ZONES_URI, 27))
@@ -1997,10 +1999,5 @@ class CountryTimeZoneListViewTest(UserApiTestCase):
         """ Verify that correct time zone info is returned """
         results = self.get_json(country_uri)
         self.assertEqual(len(results), expected_count)
-
-        # Check first time zone's description and all time zones valid
-        first_time_zone = results[0]
-        time_zone_name = first_time_zone['time_zone']
-        self.assertEqual(first_time_zone['description'], get_display_time_zone(time_zone_name))
         for time_zone_info in results:
             self._assert_time_zone_is_valid(time_zone_info)

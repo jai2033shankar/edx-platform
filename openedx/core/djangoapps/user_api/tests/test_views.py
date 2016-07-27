@@ -2008,6 +2008,8 @@ class CountryTimeZoneListViewTest(UserApiTestCase):
         self.assertIsNone(result["previous"])
         time_zones_info = result["results"]
         self.assertEqual(len(time_zones_info), expected_count)
+
+        # Check first time zone's description and all time zones valid
         first_time_zone = time_zones_info[0]
         time_zone_name = first_time_zone['time_zone']
         self.assertEqual(first_time_zone['description'], get_display_time_zone(time_zone_name))

@@ -3279,9 +3279,9 @@ class TestInstructorAPIRegradeTask(SharedModuleStoreTestCase, LoginEnrollmentTes
 @patch.dict(settings.FEATURES, {'ENTRANCE_EXAMS': True})
 @ddt.ddt
 class TestEntranceExamInstructorAPIRegradeTask(
-    SharedModuleStoreTestCase,
-    LoginEnrollmentTestCase,
-    MilestonesTestCaseMixin
+                                                SharedModuleStoreTestCase,
+                                                LoginEnrollmentTestCase,
+                                                MilestonesTestCaseMixin
 ):
     """
     Test endpoints whereby instructors can rescore student grades,

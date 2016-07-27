@@ -1065,8 +1065,7 @@ class CountryTimeZoneListView(generics.ListAPIView):
             * description: The display version of the time zone
     """
     serializer_class = CountryTimeZoneSerializer
-    paginate_by = 450
-    paginate_by_param = 'page_size'
+    paginator = None
 
     def get_queryset(self):
         country_code = self.request.GET.get('country_code', None)

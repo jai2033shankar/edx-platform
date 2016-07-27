@@ -1977,21 +1977,14 @@ class CountryTimeZoneListViewTest(UserApiTestCase):
     @ddt.data(ALL_TIME_ZONES_URI, COUNTRY_TIME_ZONES_URI)
     def test_options(self, country_uri):
         """ Verify that following options are allowed """
-        self.assertAllowedMethods(country_uri, ["OPTIONS", "GET", "HEAD"])
+        self.assertAllowedMethods(country_uri, ['OPTIONS', 'GET', 'HEAD'])
 
     @ddt.data(ALL_TIME_ZONES_URI, COUNTRY_TIME_ZONES_URI)
-    def test_put_not_allowed(self, country_uri):
-        """ Verify that put is not allowed """
-        self.assertHttpMethodNotAllowed(self.request_with_auth("put", country_uri))
-
-    def test_patch_not_allowed(self):
-        """ Verify that patch is not allowed """
-        raise SkipTest("Django 1.4's test client does not support patch")
-
-    @ddt.data(ALL_TIME_ZONES_URI, COUNTRY_TIME_ZONES_URI)
-    def test_delete_not_allowed(self, country_uri):
-        """ Verify that delete is not allowed """
-        self.assertHttpMethodNotAllowed(self.request_with_auth("delete", country_uri))
+    def test_methods_not_allowed(self, country_uri):
+        """ Verify that put, patch, and delete are not allowed """
+        unallowed_methods = ['put', 'patch', 'delete']
+        for unallowed_method in unallowed_methods:
+            self.assertHttpMethodNotAllowed(self.request_with_auth(unallowed_method, country_uri))
 
     def _assert_time_zone_is_valid(self, time_zone_info):
         """ Asserts that the time zone is a valid pytz time zone """
@@ -2002,16 +1995,12 @@ class CountryTimeZoneListViewTest(UserApiTestCase):
     @ddt.unpack
     def test_get_basic(self, country_uri, expected_count):
         """ Verify that correct time zone info is returned """
-        result = self.get_json(country_uri)
-        self.assertEqual(result["count"], expected_count)
-        self.assertIsNone(result["next"])
-        self.assertIsNone(result["previous"])
-        time_zones_info = result["results"]
-        self.assertEqual(len(time_zones_info), expected_count)
+        results = self.get_json(country_uri)
+        self.assertEqual(len(results), expected_count)
 
         # Check first time zone's description and all time zones valid
-        first_time_zone = time_zones_info[0]
+        first_time_zone = results[0]
         time_zone_name = first_time_zone['time_zone']
         self.assertEqual(first_time_zone['description'], get_display_time_zone(time_zone_name))
-        for time_zone_info in time_zones_info:
+        for time_zone_info in results:
             self._assert_time_zone_is_valid(time_zone_info)
